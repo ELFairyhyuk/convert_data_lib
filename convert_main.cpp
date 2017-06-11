@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cstring>
-#include "data2lib.h"
-
+//#include "data2lib.h"
+#include "convertData.h"
+#include "carInsurance.h"
+#include "spatialNetwork.h"
 /*bool checkFile(fstream &fs,string filename){
 	if(!fs.is_open()){
 		cout<<"can not open file "<<filename<<endl;
@@ -27,9 +29,11 @@ int main(int argc,char** argv){
 		return 1;
 	}
     //transfer UCI data to libsvm data
-	//uci2Lib(ifs,ofs);
-	kaggle2Lib(ifs,ofs);
-
+	
+	//convertData *cd=new spatialNetwork();
+	convertData *cd=new carInsurance();
+	cd->getFirstLine(ifs,ofs);
+	cd->processData(ifs,ofs);
 	ifs.close();
 	ofs.close();
     return 0;

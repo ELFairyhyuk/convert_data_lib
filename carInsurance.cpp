@@ -1,31 +1,16 @@
-#include <iostream>
+#include "carInsurance.h"
+#include <fstream>
 #include <sstream>
+#include <map>
 #include <cstring>
 #include <regex.h>
-#include "data2lib.h"
-#include <map>
-/*convert uci data to libsvm format*/
-void uci2Lib( ifstream &ifs,ofstream &ofs){
-	string line,value;
-	stringstream strs;
-	while(getline(ifs,line)){//read a line from data file
-		strs<<line;
-		getline(strs,value,',');//split the line stream with comma (char  ',')
-		ofs<<value;//output label
-		int i=1;
-		while(getline(strs,value,','))
-		{
-			ofs<<" "<<i<<":"<<value;//ouput all diemnsions
-			i++;
-		}
-		ofs<<endl;
-		//strs.str("");//clean the string in stream to reuse strs
-		strs.clear();//clean wrong flag to reuse strs 
-	}
-}
 
-/*convert data(include categorical data) from kaggle to libsvm format*/
-void kaggle2Lib( ifstream &ifs, ofstream &ofs){
+void carInsurance::getFirstLine(ifstream &ifs, ofstream &ofs){
+	//skip first line of atrributes name 
+	string line;
+	getline(ifs,line);
+}
+void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 	string line,value;
 	stringstream strs;
 	stringstream strs2;
@@ -38,12 +23,7 @@ void kaggle2Lib( ifstream &ifs, ofstream &ofs){
 	for(int i=0;i<26;i++){
 		cate[(char)('A'+i)]=i;
 	}
-	//skip first line of atrributes name 
-	getline(ifs,line);
-	int count=0;
-	while(count<3){
-		count++;
-		getline(ifs,line);
+	while(getline(ifs,line)){
 	//while(getline(ifs,line)){
 		int i=1;
     	int ind=line.find_last_of(",");
