@@ -5,7 +5,7 @@
 class spatialNetwork:public convertData{
 public:
 	spatialNetwork(){}
-	~spatialNetwork(){}
+	virtual	~spatialNetwork(){}
 	virtual void getFirstLine(ifstream &ifs, ofstream &ofs);
 	virtual void processData(ifstream &ifs,ofstream &ofs);
 };

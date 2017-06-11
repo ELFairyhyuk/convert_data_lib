@@ -4,7 +4,7 @@
 class carInsurance:public convertData{
 public:
 	carInsurance(){}
-	~carInsurance(){}
+    virtual ~carInsurance(){}
 	virtual void getFirstLine(ifstream &ifs, ofstream &ofs);
 	virtual void processData(ifstream &ifs, ofstream &ofs);
 };

@@ -34,6 +34,8 @@ int main(int argc,char** argv){
 	convertData *cd=new carInsurance();
 	cd->getFirstLine(ifs,ofs);
 	cd->processData(ifs,ofs);
+	delete cd;
+	cd=NULL;
 	ifs.close();
 	ofs.close();
     return 0;
