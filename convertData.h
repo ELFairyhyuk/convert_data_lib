@@ -8,7 +8,9 @@ class convertData{
 public:
 	//convertData(){}
 	//~convertData(){}
-	virtual void getFirstLine(ifstream &ifs,ofstream &ofs)=0;
+	virtual void getFirstLine(ifstream &ifs,ofstream &ofs){
+
+	}
 	
 	virtual void processData(ifstream &ifs,ofstream &ofs)=0;
 

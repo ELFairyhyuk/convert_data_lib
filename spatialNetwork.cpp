@@ -2,10 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstring>
-//the keyword "virtual" is unnecessary in .cpp file
-void spatialNetwork::getFirstLine(ifstream &ifs, ofstream &ofs){
 
-}
 void spatialNetwork::processData(ifstream &ifs, ofstream &ofs){	
 	string line,value;
 	stringstream strs;
