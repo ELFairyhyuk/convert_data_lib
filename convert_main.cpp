@@ -30,10 +30,9 @@ int main(int argc,char** argv){
 	}
     //transfer UCI data to libsvm data
 	
-	//convertData *cd=new spatialNetwork();
 	convertData *cd=new carInsurance();
-	cd->getFirstLine(ifs,ofs);
-	cd->processData(ifs,ofs);
+	//convertData *cd=new spatialNetwork();
+	cd->convData2Lib(ifs,ofs);
 	delete cd;
 	cd=NULL;
 	ifs.close();
