@@ -31,9 +31,14 @@ int main(int argc,char** argv){
 	}
     //transfer UCI data to libsvm data
 	
+<<<<<<< HEAD
     //convertData *cd=new carInsurance();
 	//convertData *cd=new spatialNetwork();
     convertData *cd=new day();
+=======
+	convertData *cd=new carInsurance();
+	//convertData *cd=new spatialNetwork();
+>>>>>>> origin/master
 	cd->convData2Lib(ifs,ofs);
 	delete cd;
 	cd=NULL;

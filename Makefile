@@ -6,9 +6,12 @@ carInsurance.o: carInsurance.cpp carInsurance.h convertData.h
 	g++ -c carInsurance.cpp carInsurance.h convertData.h 
 spatialNetwork.o: spatialNetwork.cpp spatialNetwork.h convertData.h 
 	g++ -c spatialNetwork.cpp spatialNetwork.h convertData.h 
+<<<<<<< HEAD
 day_0.o:day_0.h day_0.cpp convertData.h
 	g++ -c day_0.h day_0.cpp convertData.h
 
+=======
+>>>>>>> origin/master
 .PHONY:clean
 clean:
 	rm convert_main *.txt *.o *.gch
