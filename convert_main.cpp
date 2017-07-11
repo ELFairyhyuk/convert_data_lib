@@ -4,14 +4,8 @@
 #include "convertData.h"
 #include "carInsurance.h"
 #include "spatialNetwork.h"
-/*bool checkFile(fstream &fs,string filename){
-	if(!fs.is_open()){
-		cout<<"can not open file "<<filename<<endl;
-		return false;
-	}
-	else
-		return true;
-}*/
+#include "day_0.h"
+#include "common.h"
 
 
 int main(int argc,char** argv){
@@ -23,17 +17,16 @@ int main(int argc,char** argv){
 		cout<<"can not open file "<<ifile<<endl;
 		return 1;
 	}
-	ofstream ofs(ofile.c_str());
-	if(!ofs.is_open()){
-		cout<<"can not open file "<<ofile<<endl;
-		return 1;
-	}
-    //transfer UCI data to libsvm data
+	ofstream ofs(ofile.c_str(),ofstream::binary);
+    checkFile(ofs,ofile);
 	
+    //convertData *cd=new carInsurance();
 	//convertData *cd=new spatialNetwork();
-	convertData *cd=new carInsurance();
-	cd->getFirstLine(ifs,ofs);
-	cd->processData(ifs,ofs);
+	convertData *cd=new day();
+	//cd->convData2Lib(ifs,ofs);
+	int num_feature=40;
+	day dd;
+	dd.readFeature(ifs,num_feature);
 	delete cd;
 	cd=NULL;
 	ifs.close();

@@ -6,6 +6,7 @@ class spatialNetwork:public convertData{
 public:
 	spatialNetwork(){}
 	virtual	~spatialNetwork(){}
+protected:
 	virtual void processData(ifstream &ifs,ofstream &ofs);
 };
 #endif
