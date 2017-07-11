@@ -4,16 +4,11 @@
 using namespace std;
 class day : public convertData{
 public:
-<<<<<<< HEAD
     virtual ~day(){};
     void readFeature(ifstream &fs, int num_feature);
 protected:
     virtual void processData(ifstream &ifs,ofstream &ofs);
-=======
-virtual ~day(){};
-protected:
-virtual void processData(ifstream &ifs,ofstream &ofs);
->>>>>>> origin/master
+
 };
 
 #endif
