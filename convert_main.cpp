@@ -5,7 +5,18 @@
 #include "carInsurance.h"
 #include "spatialNetwork.h"
 #include "day_0.h"
+<<<<<<< HEAD
 #include "common.h"
+=======
+/*bool checkFile(fstream &fs,string filename){
+	if(!fs.is_open()){
+		cout<<"can not open file "<<filename<<endl;
+		return false;
+	}
+	else
+		return true;
+}*/
+>>>>>>> origin/master
 
 
 int main(int argc,char** argv){
@@ -20,6 +31,7 @@ int main(int argc,char** argv){
 	ofstream ofs(ofile.c_str(),ofstream::binary);
     checkFile(ofs,ofile);
 	
+<<<<<<< HEAD
     //convertData *cd=new carInsurance();
 	//convertData *cd=new spatialNetwork();
 	convertData *cd=new day();
@@ -27,6 +39,17 @@ int main(int argc,char** argv){
 	int num_feature=40;
 	day dd;
 	dd.readFeature(ifs,num_feature);
+=======
+<<<<<<< HEAD
+    //convertData *cd=new carInsurance();
+	//convertData *cd=new spatialNetwork();
+    convertData *cd=new day();
+=======
+	convertData *cd=new carInsurance();
+	//convertData *cd=new spatialNetwork();
+>>>>>>> origin/master
+	cd->convData2Lib(ifs,ofs);
+>>>>>>> origin/master
 	delete cd;
 	cd=NULL;
 	ifs.close();
