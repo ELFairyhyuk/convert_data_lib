@@ -62,49 +62,49 @@ void day::processData(ifstream &ifs, ofstream &ofs){
 
 
 void day::readFeature(ifstream &fs, int num_feature){
-	string filename;
+	string suffixName;
 	string line,value;
 	regex_t reg;
 	regcomp(&reg,"[a-z]+",REG_EXTENDED);//pattern for categorical data
 	regmatch_t pmatch[1];
 	const size_t nmatch=1;
 	long unsigned int count=0;
-	int feature_id=0;
-	stringstream strs;
+	int featureId=0;
+	stringstream sstr;
 	map<string,long unsigned int > categorical;
-	ofstream featureOfs;
-	ofstream idOfs;
-	ofstream startOfs;
-	ofstream lengthOfs;
-	while(feature_id<num_feature){
-		cout<<feature_id<<endl;
-		strs<<feature_id<<".bin";
-		strs>>filename;
-		strs.clear();
-		string name;
+	ofstream streamForFea;
+	ofstream streamForId;
+	ofstream streamForStartPos;
+	ofstream streamForLen;
+	while(featureId<num_feature){
+		cout<<featureId<<endl;
+		sstr<<featureId<<".bin";
+		sstr>>suffixName;	//stringstream content to file name
+		sstr.clear();
+		string fileName;
 
-		name="f"+filename;
-		featureOfs.open(name.c_str(),ofstream::app|ofstream::binary);
-		checkFile(featureOfs,name);
+		fileName="f"+suffixName;
+		streamForFea.open(fileName.c_str(),ofstream::app|ofstream::binary);
+		checkFile(streamForFea,fileName);
 		
-		name="id"+filename;
-		idOfs.open(name.c_str(),ofstream::app|ofstream::binary);
-		checkFile(featureOfs,name);
+		fileName="id"+suffixName;
+		streamForId.open(fileName.c_str(),ofstream::app|ofstream::binary);
+		checkFile(streamForFea,fileName);
 		
-		name="start"+filename;
-		startOfs.open(name.c_str(),ofstream::app|ofstream::binary);
-		checkFile(featureOfs,name);
+		fileName="start"+suffixName;
+		streamForStartPos.open(fileName.c_str(),ofstream::app|ofstream::binary);
+		checkFile(streamForFea,fileName);
 		
-		name="length"+filename;
-		lengthOfs.open(name.c_str(),ofstream::app|ofstream::binary);
-		checkFile(featureOfs,name);
+		fileName="length"+suffixName;
+		streamForLen.open(fileName.c_str(),ofstream::app|ofstream::binary);
+		checkFile(streamForFea,fileName);
 		int id=0;//id of instance
 		int l;//length of each feature
-		long unsigned int total_l=0;//total length of feeatures that were visited
+		long unsigned int total_l=0;//total length of features that were visited
 		while(getline(fs,line)){
 			int idx=-1;
 			int j=0;
-			while(j<=feature_id){
+			while(j<=featureId){
 				idx++;
 				line=line.substr(idx,line.length());
 				j++;
@@ -122,37 +122,37 @@ void day::readFeature(ifstream &fs, int num_feature){
 					}
 				}
                 //write feature value , start position, feature length into file in binary
-				featureOfs.write((char *)&categorical[value],sizeof(categorical[value]));//write in binary
+				streamForFea.write((char *)&categorical[value],sizeof(categorical[value]));//write in binary
 				l=sizeof(categorical[value]);
-				lengthOfs.write((char *)&l,sizeof(l));
-				startOfs.write((char*)&total_l,sizeof(total_l));
+				streamForLen.write((char *)&l,sizeof(l));
+				streamForStartPos.write((char*)&total_l,sizeof(total_l));
 				total_l+=l;
 					
 			}
 		    //numerical data
 			//skip missing data
 			else if(value!=""){
-				featureOfs.write((char *)&value,sizeof(value));
+				streamForFea.write((char *)&value,sizeof(value));
 				l=sizeof(value);
-				lengthOfs.write((char *)&l,sizeof(l));
-				startOfs.write((char*)&total_l,sizeof(total_l));
+				streamForLen.write((char *)&l,sizeof(l));
+				streamForStartPos.write((char*)&total_l,sizeof(total_l));
 				total_l+=l;
 					
 			}
 			//write instance id into file in binary
-			idOfs.write((char *)&id,sizeof(id));
+			streamForId.write((char *)&id,sizeof(id));
 			id++;
 			
 		}//end getline while
-		feature_id++;
-		strs.clear();
-		strs.str();
+		featureId++;
+		sstr.clear();
+		sstr.str();
 		fs.clear();
 		fs.seekg(0);//reset the pointer to the head of file
-		resetFStream(featureOfs);
-		resetFStream(idOfs);
-		resetFStream(startOfs);
-		resetFStream(lengthOfs);
+		resetFStream(streamForFea);
+		resetFStream(streamForId);
+		resetFStream(streamForStartPos);
+		resetFStream(streamForLen);
 
 	}
 }
