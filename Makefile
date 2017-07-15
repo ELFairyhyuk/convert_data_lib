@@ -5,6 +5,7 @@ convert_mian.o: conert_main.cpp carInsurance.h spatialNetwork.h convertData.h
 carInsurance.o: carInsurance.cpp carInsurance.h convertData.h
 	g++ std=c++11 -c carInsurance.cpp carInsurance.h convertData.h 
 spatialNetwork.o: spatialNetwork.cpp spatialNetwork.h convertData.h 
+<<<<<<< HEAD
 	g++ -std=c++11 -c spatialNetwork.cpp spatialNetwork.h convertData.h 
 day_0.o:day_0.h day_0.cpp convertData.h common.h 
 	g++ -std=c++11 -c day_0.h day_0.cpp convertData.h common.h

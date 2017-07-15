@@ -7,7 +7,6 @@
 #include "day_0.h"
 #include "common.h"
 
-
 int main(int argc,char** argv){
 	string ifile=argv[1];//filename of input data
 	string ofile=argv[2];//filename of output libsvm data
@@ -27,6 +26,7 @@ int main(int argc,char** argv){
 	int num_feature=40;
 	day dd;
 	dd.readFeature(ifs,num_feature);
+
 	delete cd;
 	cd=NULL;
 	ifs.close();

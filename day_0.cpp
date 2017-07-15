@@ -69,6 +69,7 @@ void day::readFeature(ifstream &fs, int Dim){
 	regcomp(&reg,"[a-z]+",REG_EXTENDED);//pattern for categorical data
 	regmatch_t pmatch[1];
 	const size_t nmatch=1;
+
 	float count=0;
 	int featureId=0;
 	stringstream sstr;
@@ -78,6 +79,7 @@ void day::readFeature(ifstream &fs, int Dim){
 	ofstream streamForId;
 	ofstream streamForStartPos;
 	ofstream streamForLen;
+
 	fileName="feature.bin";
 	streamForFea.open(fileName.c_str(),ofstream::app|ofstream::binary);
 	checkFile(streamForFea,fileName);
@@ -125,6 +127,7 @@ void day::readFeature(ifstream &fs, int Dim){
 				streamForFea.write((char *)&categorical[value],sizeof(categorical[value]));//write in binary
 				num_feature+=1;
 				streamForId.write((char *)&id,sizeof(id));
+
 					
 			}
 		    //numerical data
@@ -156,4 +159,5 @@ void day::readFeature(ifstream &fs, int Dim){
 	streamForId.close();
 	streamForStartPos.close();
 	streamForLen.close();
+
 }
