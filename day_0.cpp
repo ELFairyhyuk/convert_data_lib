@@ -7,6 +7,7 @@
 #include <map>
 #include <limits>
 #include <cstdlib>
+#include <vector>
 #include "common.h"
 
 using namespace std;
@@ -101,6 +102,8 @@ void day::readFeature(ifstream &fs, int Dim){
 			break;
 		int id=0;//id of instance
 		int num_feature=0;
+		vector <float> valueTemp;
+		vector <float> idTemp;
 		while(getline(fs,line)){
 			if(id>3)
 				break;
@@ -124,9 +127,11 @@ void day::readFeature(ifstream &fs, int Dim){
 					}
 				}
                 //write feature value , start position, feature length into file in binary
-				streamForFea.write((char *)&categorical[value],sizeof(categorical[value]));//write in binary
+				valueTemp.push_back(categorical[value]);
+				//streamForFea.write((char *)&categorical[value],sizeof(categorical[value]));//write in binary
 				num_feature+=1;
-				streamForId.write((char *)&id,sizeof(id));
+				idTemp.push_back(id);
+				//streamForId.write((char *)&id,sizeof(id));
 
 					
 			}
@@ -134,18 +139,22 @@ void day::readFeature(ifstream &fs, int Dim){
 			//skip missing data
 			else if(value!=""){
 				float val=stof(value);
-				streamForFea.write((char *)&val,sizeof(val));
+				valueTemp.push_back(val);
+				//streamForFea.write((char *)&val,sizeof(val));
 				num_feature+=1;
-				streamForId.write((char *)&id,sizeof(id));
+				idTemp.push_back(id);
+				//streamForId.write((char *)&id,sizeof(id));
 				cout<<featureId<<" "<<val<<endl;		
 			}
 			id++;
 			
 		}//end getline while
+		
+		streamForFea.write((char *)&valueTemp[0],valueTemp.size()*sizeof(valueTemp[0]));//write in binary
+		streamForId.write((char *)&idTemp[0],idTemp.size()*sizeof(idTemp[0]));
 		streamForLen.write((char *)&num_feature,sizeof(num_feature));
 		//streamForStartPos<<total_num<<" ";
 		//streamForLen<<num_feature<<" ";
-
 		streamForStartPos.write((char*)&total_num,sizeof(total_num));
 		total_num+=num_feature;
 		
