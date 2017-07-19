@@ -5,10 +5,7 @@
 #include "carInsurance.h"
 #include "spatialNetwork.h"
 #include "day_0.h"
-
 #include "common.h"
-
-
 
 int main(int argc,char** argv){
 	string ifile=argv[1];//filename of input data

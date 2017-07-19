@@ -5,7 +5,8 @@ using namespace std;
 class day : public convertData{
 public:
     virtual ~day(){};
-    void readFeature(ifstream &fs, int num_feature);
+
+    void readFeature(ifstream &fs, int Dim);
 protected:
     virtual void processData(ifstream &ifs,ofstream &ofs);
 

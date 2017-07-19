@@ -2,10 +2,12 @@
 #include <iostream>
 #include <sstream>
 #include <cstring>
+#include <string>
 #include <regex.h>
 #include <map>
 #include <limits>
 #include <cstdlib>
+#include <vector>
 #include "common.h"
 
 using namespace std;
@@ -61,47 +63,50 @@ void day::processData(ifstream &ifs, ofstream &ofs){
 }
 
 
-void day::readFeature(ifstream &fs, int num_feature){
-	string suffixName;
+void day::readFeature(ifstream &fs, int Dim){
+	//string suffixName;
 	string line,value;
 	regex_t reg;
 	regcomp(&reg,"[a-z]+",REG_EXTENDED);//pattern for categorical data
 	regmatch_t pmatch[1];
 	const size_t nmatch=1;
-	long unsigned int count=0;
+
+	float count=0;
 	int featureId=0;
 	stringstream sstr;
-	map<string,long unsigned int > categorical;
+	map<string, float> categorical;
+	string fileName;
 	ofstream streamForFea;
 	ofstream streamForId;
 	ofstream streamForStartPos;
 	ofstream streamForLen;
-	while(featureId<num_feature){
-		cout<<featureId<<endl;
-		sstr<<featureId<<".bin";
-		sstr>>suffixName;	//stringstream content to file name
-		sstr.clear();
-		string fileName;
 
-		fileName="f"+suffixName;
-		streamForFea.open(fileName.c_str(),ofstream::app|ofstream::binary);
-		checkFile(streamForFea,fileName);
+	fileName="feature.bin";
+	streamForFea.open(fileName.c_str(),ofstream::app|ofstream::binary);
+	checkFile(streamForFea,fileName);
 		
-		fileName="id"+suffixName;
-		streamForId.open(fileName.c_str(),ofstream::app|ofstream::binary);
-		checkFile(streamForFea,fileName);
+	fileName="instanceId.bin";
+	streamForId.open(fileName.c_str(),ofstream::app|ofstream::binary);
+	checkFile(streamForFea,fileName);
 		
-		fileName="start"+suffixName;
-		streamForStartPos.open(fileName.c_str(),ofstream::app|ofstream::binary);
-		checkFile(streamForFea,fileName);
+	fileName="startPos.bin";
+	streamForStartPos.open(fileName.c_str(),ofstream::app|ofstream::binary);
+	checkFile(streamForFea,fileName);
 		
-		fileName="length"+suffixName;
-		streamForLen.open(fileName.c_str(),ofstream::app|ofstream::binary);
-		checkFile(streamForFea,fileName);
+	fileName="length.bin";
+	streamForLen.open(fileName.c_str(),ofstream::app|ofstream::binary);
+	checkFile(streamForFea,fileName);
+	int total_num=0;//total num of value of each feature that were visited
+	while(featureId<Dim){
+		if(featureId>3)
+			break;
 		int id=0;//id of instance
-		int l;//length of each feature
-		long unsigned int total_l=0;//total length of features that were visited
+		int num_feature=0;
+		vector <float> valueTemp;
+		vector <float> idTemp;
 		while(getline(fs,line)){
+			if(id>3)
+				break;
 			int idx=-1;
 			int j=0;
 			while(j<=featureId){
@@ -122,37 +127,46 @@ void day::readFeature(ifstream &fs, int num_feature){
 					}
 				}
                 //write feature value , start position, feature length into file in binary
-				streamForFea.write((char *)&categorical[value],sizeof(categorical[value]));//write in binary
-				l=sizeof(categorical[value]);
-				streamForLen.write((char *)&l,sizeof(l));
-				streamForStartPos.write((char*)&total_l,sizeof(total_l));
-				total_l+=l;
+				valueTemp.push_back(categorical[value]);
+				//streamForFea.write((char *)&categorical[value],sizeof(categorical[value]));//write in binary
+				num_feature+=1;
+				idTemp.push_back(id);
+				//streamForId.write((char *)&id,sizeof(id));
+
 					
 			}
 		    //numerical data
 			//skip missing data
 			else if(value!=""){
-				streamForFea.write((char *)&value,sizeof(value));
-				l=sizeof(value);
-				streamForLen.write((char *)&l,sizeof(l));
-				streamForStartPos.write((char*)&total_l,sizeof(total_l));
-				total_l+=l;
-					
+				float val=stof(value);
+				valueTemp.push_back(val);
+				//streamForFea.write((char *)&val,sizeof(val));
+				num_feature+=1;
+				idTemp.push_back(id);
+				//streamForId.write((char *)&id,sizeof(id));
+				cout<<featureId<<" "<<val<<endl;		
 			}
-			//write instance id into file in binary
-			streamForId.write((char *)&id,sizeof(id));
 			id++;
 			
 		}//end getline while
+		
+		streamForFea.write((char *)&valueTemp[0],valueTemp.size()*sizeof(valueTemp[0]));//write in binary
+		streamForId.write((char *)&idTemp[0],idTemp.size()*sizeof(idTemp[0]));
+		streamForLen.write((char *)&num_feature,sizeof(num_feature));
+		//streamForStartPos<<total_num<<" ";
+		//streamForLen<<num_feature<<" ";
+		streamForStartPos.write((char*)&total_num,sizeof(total_num));
+		total_num+=num_feature;
+		
 		featureId++;
 		sstr.clear();
 		sstr.str();
 		fs.clear();
 		fs.seekg(0);//reset the pointer to the head of file
-		resetFStream(streamForFea);
-		resetFStream(streamForId);
-		resetFStream(streamForStartPos);
-		resetFStream(streamForLen);
-
 	}
+    streamForFea.close();
+	streamForId.close();
+	streamForStartPos.close();
+	streamForLen.close();
+
 }
