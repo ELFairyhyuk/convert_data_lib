@@ -6,7 +6,7 @@ class Criteo : public convertData{
 public:
     virtual ~Criteo(){};
 
-    void readFeature(ifstream &fs, int Dim);
+    void writeInBinary(ifstream &fs, int Dim);
 protected:
     virtual void processData(ifstream &ifs,ofstream &ofs);
 

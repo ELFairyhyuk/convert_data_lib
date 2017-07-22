@@ -61,7 +61,7 @@ void Criteo::processData(ifstream &ifs, ofstream &ofs) {
 	}
 }
 
-void Criteo::readFeature(ifstream &fs, int Dim) {
+void Criteo::writeInBinary(ifstream &fs, int Dim) {
 	//string suffixName;
 	string line, value;
 	regex_t reg;
@@ -97,68 +97,60 @@ void Criteo::readFeature(ifstream &fs, int Dim) {
 	int total_num = 0;	//total num of value of each feature that were visited
 	while (featureId < Dim) {
 		int id = 0;			//id of instance
-		int num_feature = 0;
+		int numFeaValue = 0;
 		vector<float> valueTemp;
 		vector<float> idTemp;
 		while (getline(fs, line)) {
-			int idx = -1;
+			int endOfFeaValue = -1;
 			int j = 0;
 			while (j <= featureId) {
-				idx++;
-				line = line.substr(idx, line.length());
+				endOfFeaValue++;
+				line = line.substr(endOfFeaValue, line.length());
 				j++;
-				idx = line.find_first_of("\t");			//tab split each feature
+				endOfFeaValue = line.find_first_of("\t");			//tab split each feature
 			}
-			value = line.substr(0, idx);	//substr(0,length())==substr(0,-1)
+			value = line.substr(0, endOfFeaValue);	//substr(0,length())==substr(0,-1)
 			//categorical data
 			if (regexec(&reg, value.c_str(), nmatch, pmatch, 0) == 0) {
 				if (categorical.find(value) == categorical.end()) {
 					categorical.insert(make_pair(value, count));
 					count++;
-					if (count == numeric_limits<long unsigned int>::max()) {
+					if(count == numeric_limits<long unsigned int>::max()) {
 						cout << "long int overread!" << endl;
 						exit(1);
 					}
 				}
 				//write feature value , start position, feature length into file in binary
 				valueTemp.push_back(categorical[value]);
-				//streamForFea.write((char *)&categorical[value],sizeof(categorical[value]));//write in binary
-				num_feature += 1;
+				numFeaValue += 1;
 				idTemp.push_back(id);
-				//streamForId.write((char *)&id,sizeof(id));
-
 			}
 			//numerical data
 			//skip missing data
 			else if (value != "") {
 				float val = stof(value);
 				valueTemp.push_back(val);
-				//streamForFea.write((char *)&val,sizeof(val));
-				num_feature += 1;
+				numFeaValue += 1;
 				idTemp.push_back(id);
-				//streamForId.write((char *)&id,sizeof(id));
 				cout << featureId << " " << val << endl;
 			}
 			id++;
-
 		}//end getline while
 
-		streamForFea.write((char *) &valueTemp[0],
-				valueTemp.size() * sizeof(valueTemp[0]));	//write in binary
-		streamForId.write((char *) &idTemp[0],
-				idTemp.size() * sizeof(idTemp[0]));
-		streamForLen.write((char *) &num_feature, sizeof(num_feature));
+		streamForFea.write((char*)&valueTemp[0], valueTemp.size() * sizeof(valueTemp[0]));	//write in binary
+		streamForId.write((char*)&idTemp[0], idTemp.size() * sizeof(idTemp[0]));
+		streamForLen.write((char *)&numFeaValue, sizeof(numFeaValue));
 		//streamForStartPos<<total_num<<" ";
 		//streamForLen<<num_feature<<" ";
 		streamForStartPos.write((char*) &total_num, sizeof(total_num));
-		total_num += num_feature;
+		total_num += numFeaValue;
 
 		featureId++;
 		sstr.clear();
 		sstr.str();
 		fs.clear();
 		fs.seekg(0);		//reset the pointer to the head of file
-	}
+	}//while for each feature
 	streamForFea.close();
 	streamForId.close();
 	streamForStartPos.close();
