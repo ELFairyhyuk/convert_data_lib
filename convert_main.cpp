@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 	//cd->convData2Lib(ifs,ofs);
 	int num_feature = 40;
 	Criteo dd;
-	dd.readFeature(inFileStream, num_feature);
+	dd.writeInBinary(inFileStream, num_feature);
 
 	delete cd;
 	cd = NULL;
