@@ -20,13 +20,13 @@ int main(int argc, char** argv) {
 	ofstream outFileStream(outputFile.c_str(), ofstream::binary);
 	checkFile(outFileStream, outputFile);
 
-	//convertData *cd=new carInsurance();
+	convertData *cd=new carInsurance();
 	//convertData *cd=new spatialNetwork();
-	convertData *cd = new Criteo();
-	//cd->convData2Lib(ifs,ofs);
-	int num_feature = 40;
-	Criteo dd;
-	dd.writeInBinary(inFileStream, num_feature);
+	//convertData *cd = new Criteo();
+	cd->convData2Lib(inFileStream,outFileStream);
+	//int num_feature = 40;
+	//Criteo dd;
+	//dd.writeInBinary(inFileStream, num_feature);
 
 	delete cd;
 	cd = NULL;
