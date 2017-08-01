@@ -14,7 +14,6 @@ void carInsurance::getFirstLine(ifstream &ifs, ofstream &ofs){
 void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 	string line,value;
 	stringstream strs;
-	stringstream strs2;
 	regex_t reg1,reg2,reg3;
 	regcomp(&reg1,"[A-Z]+",REG_EXTENDED);//pattern for factory
 	regcomp(&reg2,"[A-Z]+\\.",REG_EXTENDED);//pattern for model
@@ -31,19 +30,16 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 	while(getline(ifs,line)){
 		int i=1;//id of feature
     	int ind=line.find_last_of(",");
-		strs2<<line.substr(ind+1,line.length());//output label:the last term in riginal data is label
-		strs2>>value;
-		ofs<<value;
-		strs2.clear();
+		string target = line.substr(ind+1,line.length());//output label:the last term in riginal data is label
+		ofs << target;
 		//substr from 0 to ind is feature value
 		strs<<line.substr(0,ind);
-	    while(getline(strs,value,',')){	
+	    while(getline(strs,value,',')){
 			//categorical data
 			//submodel
 			if(regexec(&reg3,value.c_str(),nmatch,pmatch,0)==0){
 				if(submodel.find(value)==submodel.end()){
 				    submodel[value]=counts;
-					//submodel.insert(make_pair(value,counts));//or insert(pair<string, int>(value,counts))
 					counts++;
 				}
 				ofs<<" "<<i<<":"<<submodel[value];
@@ -55,18 +51,6 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 					countm++;
 				}
 				ofs<<" "<<i<<":"<<model[value];
-				/*strs2<<value;
-				char c;
-				string rest;
-				while(strs2>>c){
-					if(c!='.')
-						ofs<<(int)(c-'A')<<0;//ASC2 of 'A' is 65
-					else{
-						strs2>>rest;
-						ofs<<rest;
-					}
-				}
-				strs2.clear();*/
 			}
 			
 			//factory
