@@ -5,6 +5,7 @@
 #include <cstring>
 #include <regex.h>
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
 void carInsurance::getFirstLine(ifstream &ifs, ofstream &ofs){
 	//skip first line of atrributes name 
@@ -29,11 +30,12 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 	int countf=0;//factory
 	while(getline(ifs,line)){
 		int i=1;//id of feature
-    	int ind=line.find_last_of(",");
-		string target = line.substr(ind+1,line.length());//output label:the last term in riginal data is label
-		ofs << target;
+    	int lastCommaPos=line.find_last_of(",");
+		string target = line.substr(lastCommaPos+1, line.length() - lastCommaPos - 1);//output label:the last term in riginal data is label
+		float fvalue = atof(target.c_str());
+		ofs<<fvalue;
 		//substr from 0 to ind is feature value
-		strs<<line.substr(0,ind);
+		strs<<line.substr(0, lastCommaPos);
 	    while(getline(strs,value,',')){
 			//categorical data
 			//submodel
@@ -63,8 +65,9 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 			}
 			//numerical data
 			//skip missing data
-			else if(value!="?") 
+			else if(value!="?") {
 				ofs<<" "<<i<<":"<<value;
+			}
 			i++;
 		}
 	
