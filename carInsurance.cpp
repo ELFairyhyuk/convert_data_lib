@@ -6,6 +6,7 @@
 #include <regex.h>
 #include <iostream>
 #include <stdlib.h>
+#include <vector>
 using namespace std;
 void carInsurance::getFirstLine(ifstream &ifs, ofstream &ofs){
 	//skip first line of atrributes name 
@@ -15,19 +16,11 @@ void carInsurance::getFirstLine(ifstream &ifs, ofstream &ofs){
 void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 	string line,value;
 	stringstream strs;
-	regex_t reg1,reg2,reg3;
-	regcomp(&reg1,"[A-Z]+",REG_EXTENDED);//pattern for factory
-	regcomp(&reg2,"[A-Z]+\\.",REG_EXTENDED);//pattern for model
-	regcomp(&reg3,"[A-Z]+\\.[0-9]+\\.",REG_EXTENDED);//pattern for submodel
-	regmatch_t pmatch[1];
-	const size_t nmatch=1;
-	//get map
-    map<string, int> model;
-	map<string, int> submodel;
-	map<string, int> factory;
-	int counts=0;//submodel
-	int countm=0;//modek
-	int countf=0;//factory
+
+	vector<map<string, int> > category;
+	for(int c = 0; c < 15; c++)
+		category.push_back(map<string, int>());
+	map<string, int> NVCat;
 	while(getline(ifs,line)){
 		int i=1;//id of feature
     	int lastCommaPos=line.find_last_of(",");
@@ -37,37 +30,29 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 		//substr from 0 to ind is feature value
 		strs<<line.substr(0, lastCommaPos);
 	    while(getline(strs,value,',')){
-			//categorical data
-			//submodel
-			if(regexec(&reg3,value.c_str(),nmatch,pmatch,0)==0){
-				if(submodel.find(value)==submodel.end()){
-				    submodel[value]=counts;
-					counts++;
-				}
-				ofs<<" "<<i<<":"<<submodel[value];
-			}
-			//model
-			else if(regexec(&reg2,value.c_str(),nmatch,pmatch,0)==0){
-				if(model.find(value)==model.end()){
-					model[value]=countm;
-					countm++;
-				}
-				ofs<<" "<<i<<":"<<model[value];
-			}
-			
-			//factory
-			else if(regexec(&reg1,value.c_str(),nmatch,pmatch,0)==0){
-				if(factory.find(value)==factory.end()){
-					factory[value]=countf;
-					countf++;
-				}
-				ofs<<" "<<i<<":"<<factory[value];
-			}
-			//numerical data
-			//skip missing data
-			else if(value!="?") {
-				ofs<<" "<<i<<":"<<value;
-			}
+	    	if(value == "?"){
+	    		i++;
+	    		continue;
+	    	}
+	    	//numerical data
+	    	if(i < 6 || (i > 20 && i < 30) || i > 30)
+	    			ofs<<" "<<i<<":"<<atof(value.c_str());
+	    	else{//categorical data
+	    		if(i <= 20){
+	    			if(category[i - 6].find(value) == category[i - 6].end())
+	    				category[i - 6][value] = category[i - 6].size();
+	    			ofs<<" "<<i<<":"<<category[i - 6][value];
+	    		}
+	    		else if(i == 30){
+	    			if(NVCat.find(value) == NVCat.end())
+	    				NVCat[value] = NVCat.size();
+	    			ofs<<" "<<i<<":"<<NVCat[value];
+	    		}
+	    		else{
+	    			cerr << "unknown features" << endl;
+	    			exit(0);
+	    		}
+	    	}
 			i++;
 		}
 	
@@ -75,6 +60,4 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 		strs.clear();
 		strs.str();
 	}
-	regfree(&reg1);
-	regfree(&reg2);
 }
