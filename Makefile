@@ -1,7 +1,8 @@
 FLAGS := -O3
 convert_main: convert_main.o carInsurance.o spatialNetwork.o criteo.o common.o
 	g++ $(FLAGS) convert_main.o carInsurance.o spatialNetwork.o criteo.o common.o -o convert_main
-convert_mian.o: conert_main.cpp carInsurance.h spatialNetwork.h convertData.h
+
+convert_main.o: convert_main.cpp carInsurance.h spatialNetwork.h convertData.h
 	g++ $(FLAGS) -c convert_main.cpp
 carInsurance.o: carInsurance.cpp carInsurance.h convertData.h
 	g++ $(FLAGS) -c carInsurance.cpp

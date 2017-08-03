@@ -24,9 +24,8 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 	while(getline(ifs,line)){
 		int i=1;//id of feature
     	int lastCommaPos=line.find_last_of(",");
-		string target = line.substr(lastCommaPos+1, line.length() - lastCommaPos - 1);//output label:the last term in riginal data is label
-		float fvalue = atof(target.c_str());
-		ofs<<fvalue;
+		string target = line.substr(lastCommaPos+1, line.length() - lastCommaPos - 2);//last term is label; windowns has "\r\n" at the end of line
+		ofs<<target;
 		//substr from 0 to ind is feature value
 		strs<<line.substr(0, lastCommaPos);
 	    while(getline(strs,value,',')){
@@ -36,7 +35,7 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 	    	}
 	    	//numerical data
 	    	if(i < 6 || (i > 20 && i < 30) || i > 30)
-	    			ofs<<" "<<i<<":"<<atof(value.c_str());
+	    			ofs<<" "<<i<<":"<< value;
 	    	else{//categorical data
 	    		if(i <= 20){
 	    			if(category[i - 6].find(value) == category[i - 6].end())
@@ -56,7 +55,7 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 			i++;
 		}
 	
-		ofs<<endl;
+		ofs << "\n";
 		strs.clear();
 		strs.str();
 	}
