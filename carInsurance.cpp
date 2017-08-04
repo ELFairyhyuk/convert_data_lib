@@ -28,6 +28,7 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 		ofs<<target;
 		//substr from 0 to ind is feature value
 		strs<<line.substr(0, lastCommaPos);
+		string blindMake, blindModel;
 	    while(getline(strs,value,',')){
 	    	if(value == "?"){
 	    		i++;
@@ -37,15 +38,30 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 	    	if(i < 6 || (i > 20 && i < 30) || i > 30)
 	    			ofs<<" "<<i<<":"<< value;
 	    	else{//categorical data
-	    		if(i <= 20){
-	    			if(category[i - 6].find(value) == category[i - 6].end())
-	    				category[i - 6][value] = category[i - 6].size();
-	    			ofs<<" "<<i<<":"<<category[i - 6][value];
+	    		if(i == 6){
+	    			ofs<<" "<<i<<":"<< value[0] - 'A' + 1;
+	    			if(value.size() > 1)
+	    				ofs << value[1] - 'A' + 1;
+	    			blindMake = value;
+	    		}
+	    		else if(i == 7){
+	    			ofs << " " << i << ":" << value.substr(blindMake.size() + 1);
+	    			blindModel = value;
+	    		}
+	    		else if(i == 8){
+	    			ofs << " " << i << ":" << value.substr(blindModel.size() + 1);
+	    		}
+	    		else if(i > 8 && i <= 20){
+//	    			if(category[i - 6].find(value) == category[i - 6].end())
+//	    				category[i - 6][value] = category[i - 6].size();
+//	    			ofs<<" "<<i<<":"<<category[i - 6][value];
+	    			ofs<<" "<<i<<":"<< value[0] - 'A' + 1;
 	    		}
 	    		else if(i == 30){
-	    			if(NVCat.find(value) == NVCat.end())
-	    				NVCat[value] = NVCat.size();
-	    			ofs<<" "<<i<<":"<<NVCat[value];
+//	    			if(NVCat.find(value) == NVCat.end())
+//	    				NVCat[value] = NVCat.size();
+//	    			ofs<<" "<<i<<":"<<NVCat[value];
+	    			ofs<<" "<<i<<":"<< value[0] - 'A' + 1;
 	    		}
 	    		else{
 	    			cerr << "unknown features" << endl;
