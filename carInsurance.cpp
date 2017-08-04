@@ -1,7 +1,7 @@
 #include "carInsurance.h"
 #include <fstream>
 #include <sstream>
-#include <map>
+#include <unordered_map>
 #include <cstring>
 #include <regex.h>
 #include <iostream>
@@ -17,10 +17,10 @@ void carInsurance::processData(ifstream &ifs, ofstream &ofs){
 	string line,value;
 	stringstream strs;
 
-	vector<map<string, int> > category;
+	vector<unordered_map<string, int> > category;
 	for(int c = 0; c < 15; c++)
-		category.push_back(map<string, int>());
-	map<string, int> NVCat;
+		category.push_back(unordered_map<string, int>());
+	unordered_map<string, int> NVCat;
 	while(getline(ifs,line)){
 		int i=1;//id of feature
     	int lastCommaPos=line.find_last_of(",");
